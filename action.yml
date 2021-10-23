@@ -1,12 +1,21 @@
 name: "cangulo.nuke.releasecreator"
-description: "Download cangulo.nuke.releasecreator to $GITHUB_WORKSPACE path"
+description: "Execute cangulo.nuke.releasecreator to $GITHUB_WORKSPACE path"
 inputs:
-  version:
-    description: "Version as 'x.y.z' or 'latest'"
+  githubToken:
+    description: "Github Token"
     required: true
-    default: "latest"
+  releaseSettingsPath:
+    description: "settings to the json file with the conventional commits model"
+    required: true
+
 runs:
-  using: "docker"
-  image: "Dockerfile"
-  args:
-    - ${{ inputs.version }}
+  using: "composite"
+  steps:
+    - id: commits-validation
+      name: Validating PR commits
+      env:
+        githubToken: ${{ inputs.githubToken }}
+        ReleaseSettingsPath: ${{ inputs.releaseSettingsPath }}
+        PullRequestNumber: ${{ github.event.number }}
+      run: ${{ github.action_path }}/app/cangulo.nuke.releasecreator CreateRelease --root .
+      shell: bash
