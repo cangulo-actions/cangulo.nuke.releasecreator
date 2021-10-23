@@ -12,9 +12,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Validating PR commits Using executable files
+      - name: Calculating Next Release Version Using executable files
         env:
-          GitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          ValidationSettingsPath: ./cicd/prCommitValidationSettings.json
+          GithubToken: ${{ github.token }}
+          ReleaseSettingsPath: ./cicd/releaseSettings.json
           PullRequestNumber: ${{ github.event.number }}
-        run: ./app/cangulo.nuke.releasecreator PrintPipelineInfo --root .
+        run: ./app/cangulo.nuke.releasecreator CalculateNextReleaseNumber --root .
+
+  test-gh-action-directly:
+    name: Testing Release Candidate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Calculating Next Release Version Using Release Candidate
+        uses: cangulo-actions/cangulo.nuke.releasecreator@release/v0.0.1
+        with:
+          releaseSettingsPath: ./cicd/releaseSettings.json
+          onlyCalculateReleaseNumber: true
