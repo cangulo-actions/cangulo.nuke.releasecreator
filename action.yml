@@ -1,20 +1,17 @@
 name: "cangulo.nuke.releasecreator"
 description: "Execute cangulo.nuke.releasecreator to $GITHUB_WORKSPACE path"
 inputs:
-  githubToken:
-    description: "Github Token"
-    required: true
   releaseSettingsPath:
-    description: "settings to the json file with the conventional commits model"
+    description: "settings to the json file with the release settings"
     required: true
 
 runs:
   using: "composite"
   steps:
-    - id: commits-validation
-      name: Validating PR commits
+    - id: create-release
+      name: Releasing
       env:
-        githubToken: ${{ inputs.githubToken }}
+        githubToken: ${{ secrets.GITHUB_TOKEN }}
         ReleaseSettingsPath: ${{ inputs.releaseSettingsPath }}
         PullRequestNumber: ${{ github.event.number }}
       run: ${{ github.action_path }}/app/cangulo.nuke.releasecreator CreateRelease --root .
