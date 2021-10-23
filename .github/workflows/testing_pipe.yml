@@ -1,21 +1,31 @@
-name: Testing cangulo.nuke.releasecreator
+name: Test GH Action
 
-on: [push]
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize]
+
 
 jobs:
-  hello_world_job:
+  test-gh-executable-files:
+    name: Testing Executable Files
     runs-on: ubuntu-latest
-    name: Downloading cangulo.nuke.releasecreator
     steps:
-      - name: Downloading latest cangulo.nuke.releasecreator
-        uses: cangulo-actions/cangulo.nuke.releasecreator@main
+      - uses: actions/checkout@v2
+      - name: Calculating Next Release Version Using executable files
+        env:
+          GithubToken: ${{ github.token }}
+          ReleaseSettingsPath: ./cicd/releaseSettings.json
+          PullRequestNumber: ${{ github.event.number }}
+        run: ./app/cangulo.nuke.releasecreator CalculateNextReleaseNumber --root .
+
+  test-gh-action-directly:
+    name: Testing Release Candidate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Calculating Next Release Version Using Release Candidate
+        uses: cangulo-actions/cangulo.nuke.releasecreator@release/v0.0.1
         with:
-          version: latest
-      - name: Displaying help of the latest version
-        run: ./cangulo.nuke.releasecreator/cangulo.nuke.releasecreator --root . --help --verbosity verbose
-      - name: Downloading cangulo.nuke.releasecreator version 0.0.1
-        uses: cangulo-actions/cangulo.nuke.releasecreator@0.0.1
-        with:
-          version: 0.0.1
-      - name: Display help of the version 0.0.1
-        run: ./cangulo.nuke.releasecreator/cangulo.nuke.releasecreator PrintPipelineInfo --root . --help --verbosity verbose
+          releaseSettingsPath: ./cicd/releaseSettings.json
+          onlyCalculateReleaseNumber: true
