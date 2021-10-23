@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v5.0": {
-      "cangulo.nuke.releasecreator/0.0.0": {
+      "cangulo.nuke.releasecreator/0.0.1": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection": "5.0.2",
           "Nuke.Common": "5.1.4",
@@ -1433,7 +1433,7 @@
     }
   },
   "libraries": {
-    "cangulo.nuke.releasecreator/0.0.0": {
+    "cangulo.nuke.releasecreator/0.0.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
