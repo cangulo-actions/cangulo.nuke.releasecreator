@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Create Release
-        uses: cangulo-actions/cangulo.nuke.releasecreator@release/v0.0.1
+        uses: cangulo-actions/cangulo.nuke.releasecreator@main
         with:
           releaseSettingsPath: ./cicd/releaseSettings.json
           token: ${{ secrets.GITHUB_TOKEN }}
