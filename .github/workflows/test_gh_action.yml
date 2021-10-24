@@ -28,4 +28,5 @@ jobs:
         uses: cangulo-actions/cangulo.nuke.releasecreator@release/v0.0.1
         with:
           releaseSettingsPath: ./cicd/releaseSettings.json
+          token: ${{ github.token }}
           onlyCalculateReleaseNumber: true
