@@ -5,7 +5,7 @@ inputs:
     description: "settings to the json file with the release settings"
     required: true
   token:
-    description: "Please provide here a token for pushing the changes and creating a release. The default token ${{ github.token }} or ${{ secrets.GITHUB_TOKEN }} are fine but won't trigget the release event. Please check the reamde of this GH action."
+    description: "Please provide here a token for pushing the changes and creating a release."
     required: true
   onlyCalculateReleaseNumber:
     description: "true or false"
@@ -14,40 +14,25 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - id: setup-token
-      name: Setting token
-      env:
-        githubToken: ${{ github.token }}
-        ReleaseSettingsPath: ${{ inputs.releaseSettingsPath }}
-        PullRequestNumber: ${{ github.event.number }}
-      run: |
-        if [[ -z "${{ inputs.onlyCalculateReleaseNumber}}" ]]; then
-          echo "setting default github token"
-          echo 'TOKEN_FOR_ACTION='${{ github.token }}>> $GITHUB_ENV
-        else
-          echo "setting token provided in the input"
-          echo 'TOKEN_FOR_ACTION='${{ inputs.token }}>> $GITHUB_ENV
-        fi 
-      shell: bash
     - id: calculate-release-number
       name: Calculate Release Number
       env:
-        githubToken: ${{ env.TOKEN_FOR_ACTION }}
+        githubToken: ${{ inputs.token }}
         ReleaseSettingsPath: ${{ inputs.releaseSettingsPath }}
         PullRequestNumber: ${{ github.event.number }}
       run: |
         if [[ "${{ inputs.onlyCalculateReleaseNumber}}" == "true" ]]; then
-          # ${{ github.action_path }}/app/cangulo.nuke.releasecreator CalculateNextReleaseNumber --root .
+          ${{ github.action_path }}/app/cangulo.nuke.releasecreator CalculateNextReleaseNumber --root .
         fi 
       shell: bash
     - id: create-release
       name: Releasing
       env:
-        GithubToken: ${{ env.TOKEN_FOR_ACTION }}
+        GithubToken: ${{ inputs.token }}
         ReleaseSettingsPath: ${{ inputs.releaseSettingsPath }}
         PullRequestNumber: ${{ github.event.number }}
       run: |
         if [[ -z "${{ inputs.onlyCalculateReleaseNumber}}" || "${{ inputs.onlyCalculateReleaseNumber}}" == "false" ]]; then
-          # ${{ github.action_path }}/app/cangulo.nuke.releasecreator CreateRelease --root .
+          ${{ github.action_path }}/app/cangulo.nuke.releasecreator CreateRelease --root .
         fi 
       shell: bash

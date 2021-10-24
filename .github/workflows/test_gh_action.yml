@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Calculating Next Release Version Using executable files
         env:
-          GithubToken: ${{ github.token }}
+          GithubToken: ${{ secrets.GITHUB_TOKEN }}
           ReleaseSettingsPath: ./cicd/releaseSettings.json
           PullRequestNumber: ${{ github.event.number }}
         run: ./app/cangulo.nuke.releasecreator CalculateNextReleaseNumber --root .
@@ -27,5 +27,5 @@ jobs:
         uses: cangulo-actions/cangulo.nuke.releasecreator@release/v0.0.1
         with:
           releaseSettingsPath: ./cicd/releaseSettings.json
-          token: ${{ github.token }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           onlyCalculateReleaseNumber: true
