@@ -6,8 +6,8 @@ on:
       - closed
     branches:
       - main
-    paths:
-      - 'src/**'
+    # paths:
+    #   - 'src/**'
 
 jobs:
   test-gh-action-directly:
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Create Release
+      - name: Create Release using main branch
         uses: cangulo-actions/cangulo.nuke.releasecreator@main
         with:
           releaseSettingsPath: ./cicd/releaseSettings.json
