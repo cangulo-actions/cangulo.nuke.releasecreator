@@ -15,6 +15,7 @@ jobs:
         env:
           GithubToken: ${{ secrets.GITHUB_TOKEN }}
           ReleaseSettingsPath: ./cicd/releaseSettings.json
+          PullRequestNumber: ${{ github.event.number }}
         run: ./app/cangulo.nuke.releasecreator CalculateNextReleaseNumber --root .
 
   test-gh-action-directly:
